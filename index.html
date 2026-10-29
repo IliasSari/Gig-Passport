@@ -4,16 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gig Passport</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     
     <!-- Βασικό Header της εφαρμογής -->
     <header class="app-header">
-        <h1>🎟️ Gig Passport</h1>
+        <div class="logo">
+            <span class="passport-icon">🎟️</span>
+            <h1>Gig Passport</h1>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary">📥 Εξαγωγή</button>
+            <button class="btn btn-secondary">📤 Εισαγωγή</button>
+            <button class="btn btn-primary">+ Νέο Live</button>
+        </div>
     </header>
 
     <main class="container">
-        <!-- Εδώ θα προσθέσουμε τα υπόλοιπα στα επόμενα βήματα -->
+        <!-- 1. Μπάρα Στατιστικών -->
+        <section class="stats-bar">
+            <div class="stat-card">
+                <span class="stat-num" id="totalGigs">0</span>
+                <span class="stat-label">Συναυλίες</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num" id="uniqueBands">0</span>
+                <span class="stat-label">Μπάντες</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num" id="topVenue">-</span>
+                <span class="stat-label">Top Χώρος</span>
+            </div>
+        </section>
+
+        <!-- 2. Αναζήτηση & Φίλτρα -->
+        <section class="controls-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Αναζήτηση μπάντας, χώρου ή ανάμνησης...">
+            <select id="yearFilter">
+                <option value="all">Όλες οι χρονιές</option>
+            </select>
+        </section>
+
+        <!-- 3. Timeline / Λίστα Συναυλιών -->
+        <section id="timeline" class="timeline-container">
+            <p style="text-align:center; color: var(--muted); padding: 2rem;">
+                Δεν υπάρχουν καταχωρήσεις ακόμα. Πρόσθεσε το πρώτο σου live!
+            </p>
+        </section>
     </main>
 
 </body>
