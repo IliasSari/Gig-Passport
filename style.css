@@ -1,4 +1,4 @@
-/* --- CSS Βήμα 1: Μεταβλητές, Reset & Header --- */
+/* Variables, Reset & Header */
 
 :root {
     --bg-color: #121316;
@@ -24,14 +24,14 @@ body {
     line-height: 1.6;
 }
 
-/* Βασικό Container */
+/* Main Container */
 .container {
     max-width: 900px;
     margin: 2rem auto;
     padding: 0 1.5rem;
 }
 
-/* Header Εφαρμογής */
+/* App Header */
 .app-header {
     display: flex;
     justify-content: space-between;
@@ -63,7 +63,7 @@ body {
     gap: 0.75rem;
 }
 
-/* Κουμπιά (Buttons) */
+/* Buttons */
 .btn {
     padding: 0.6rem 1.2rem;
     border-radius: 8px;

@@ -8,7 +8,7 @@
 </head>
 <body>
     
-    <!-- Βασικό Header της εφαρμογής -->
+    <!-- Main App Header -->
     <header class="app-header">
         <div class="logo">
             <span class="passport-icon">🎟️</span>
@@ -22,11 +22,11 @@
     </header>
 
     <main class="container">
-        <!-- 1. Μπάρα Στατιστικών -->
+        <!-- 1. Stats Bar -->
         <section class="stats-bar">
             <div class="stat-card">
                 <span class="stat-num" id="totalGigs">0</span>
-                <span class="stat-label">Conserts</span>
+                <span class="stat-label">Concerts</span>
             </div>
             <div class="stat-card">
                 <span class="stat-num" id="uniqueBands">0</span>
@@ -34,50 +34,50 @@
             </div>
             <div class="stat-card">
                 <span class="stat-num" id="topVenue">-</span>
-                <span class="stat-label">Top Place</span>
+                <span class="stat-label">Top Venue</span>
             </div>
         </section>
 
-        <!-- 2. Αναζήτηση & Φίλτρα -->
+        <!-- 2. Search & Filters -->
         <section class="controls-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Searching for a band, a venue, or a memory...">
+            <input type="text" id="searchInput" placeholder="🔍 Search band, venue or memories...">
             <select id="yearFilter">
-                <option value="all">All years</option>
+                <option value="all">All Years</option>
             </select>
         </section>
 
-        <!-- 3. Timeline / Λίστα Συναυλιών -->
+        <!-- 3. Timeline / Gigs List -->
         <section id="timeline" class="timeline-container">
             <p style="text-align:center; color: var(--muted); padding: 2rem;">
-               There are no entries yet. Add your first live event!
+                No entries yet. Add your first live!
             </p>
         </section>
     </main>
 
-    <!-- 4. Modal Φόρμας για Νέο Live -->
+    <!-- 4. Modal Form for New Live -->
     <div id="gigModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h2>Add new live</h2>
+            <h2>Add New Live</h2>
             <form id="gigForm">
                 <div class="form-group">
-                    <label for="bandName">Band's name / artist *</label>
-                    <input type="text" id="bandName" required placeholder="π.χ. Iron Maiden">
+                    <label for="bandName">Band / Artist Name *</label>
+                    <input type="text" id="bandName" required placeholder="e.g. Iron Maiden">
                 </div>
                 <div class="form-group">
-                    <label for="venueName">Place / Venue *</label>
-                    <input type="text" id="venueName" required placeholder="π.χ. MammothFest / TerraVibe">
+                    <label for="venueName">Venue *</label>
+                    <input type="text" id="venueName" required placeholder="e.g. OAKA / TerraVibe">
                 </div>
                 <div class="form-group">
-                    <label for="gigDate"> Date *</label>
+                    <label for="gigDate">Date *</label>
                     <input type="date" id="gigDate" required>
                 </div>
                 <div class="form-group">
-                    <label for="gigRating">rating (1-5)</label>
+                    <label for="gigRating">Rating (1-5)</label>
                     <input type="number" id="gigRating" min="1" max="5" value="5">
                 </div>
                 <div class="form-group">
-                    <label for="gigNotes"> Memories / Notes </label>
-                    <textarea id="gigNotes" rows="3" placeholder="Εντυπώσεις, setlist, παρέα..."></textarea>
+                    <label for="gigNotes">Memories / Notes</label>
+                    <textarea id="gigNotes" rows="3" placeholder="Impressions, setlist, friends..."></textarea>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" id="closeModalBtn">Cancel</button>
@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <!-- Σύνδεση με JavaScript (θα την προσθέσουμε στα επόμενα βήματα) -->
+    <!-- JavaScript Integration (will be added in upcoming steps) -->
     <!-- <script src="app.js"></script> -->
 </body>
 </html>
