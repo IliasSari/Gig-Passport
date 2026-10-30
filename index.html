@@ -15,9 +15,9 @@
             <h1>Gig Passport</h1>
         </div>
         <div class="header-actions">
-            <button class="btn btn-secondary">📥 Εξαγωγή</button>
-            <button class="btn btn-secondary">📤 Εισαγωγή</button>
-            <button class="btn btn-primary">+ Νέο Live</button>
+            <button class="btn btn-secondary" id="exportBtn">📥 Export</button>
+            <button class="btn btn-secondary" id="importBtn">📤 Import</button>
+            <button class="btn btn-primary" id="openModalBtn">+ New Live</button>
         </div>
     </header>
 
@@ -26,33 +26,68 @@
         <section class="stats-bar">
             <div class="stat-card">
                 <span class="stat-num" id="totalGigs">0</span>
-                <span class="stat-label">Συναυλίες</span>
+                <span class="stat-label">Conserts</span>
             </div>
             <div class="stat-card">
                 <span class="stat-num" id="uniqueBands">0</span>
-                <span class="stat-label">Μπάντες</span>
+                <span class="stat-label">Bands</span>
             </div>
             <div class="stat-card">
                 <span class="stat-num" id="topVenue">-</span>
-                <span class="stat-label">Top Χώρος</span>
+                <span class="stat-label">Top Place</span>
             </div>
         </section>
 
         <!-- 2. Αναζήτηση & Φίλτρα -->
         <section class="controls-bar">
-            <input type="text" id="searchInput" placeholder="🔍 Αναζήτηση μπάντας, χώρου ή ανάμνησης...">
+            <input type="text" id="searchInput" placeholder="🔍 Searching for a band, a venue, or a memory...">
             <select id="yearFilter">
-                <option value="all">Όλες οι χρονιές</option>
+                <option value="all">All years</option>
             </select>
         </section>
 
         <!-- 3. Timeline / Λίστα Συναυλιών -->
         <section id="timeline" class="timeline-container">
             <p style="text-align:center; color: var(--muted); padding: 2rem;">
-                Δεν υπάρχουν καταχωρήσεις ακόμα. Πρόσθεσε το πρώτο σου live!
+               There are no entries yet. Add your first live event!
             </p>
         </section>
     </main>
 
+    <!-- 4. Modal Φόρμας για Νέο Live -->
+    <div id="gigModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Add new live</h2>
+            <form id="gigForm">
+                <div class="form-group">
+                    <label for="bandName">Band's name / artist *</label>
+                    <input type="text" id="bandName" required placeholder="π.χ. Iron Maiden">
+                </div>
+                <div class="form-group">
+                    <label for="venueName">Place / Venue *</label>
+                    <input type="text" id="venueName" required placeholder="π.χ. MammothFest / TerraVibe">
+                </div>
+                <div class="form-group">
+                    <label for="gigDate"> Date *</label>
+                    <input type="date" id="gigDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="gigRating">rating (1-5)</label>
+                    <input type="number" id="gigRating" min="1" max="5" value="5">
+                </div>
+                <div class="form-group">
+                    <label for="gigNotes"> Memories / Notes </label>
+                    <textarea id="gigNotes" rows="3" placeholder="Εντυπώσεις, setlist, παρέα..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="closeModalBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Σύνδεση με JavaScript (θα την προσθέσουμε στα επόμενα βήματα) -->
+    <!-- <script src="app.js"></script> -->
 </body>
 </html>
