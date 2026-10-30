@@ -101,7 +101,7 @@ body {
 /* Stats Bar Layout */
 .stats-bar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));    
     gap: 1.25rem;
     margin-bottom: 2rem;
 }
@@ -161,4 +161,131 @@ body {
 .controls-bar select {
     min-width: 160px;
     cursor: pointer;
+}
+
+/* Third step. Timeline, Gig Cards & Modal */
+
+/* Timeline Container */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Individual Gig Card (Passport Stamp Style) */
+.gig-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gig-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gig-info h3 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 0.3rem;
+}
+
+.gig-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.gig-notes {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+}
+
+.gig-rating {
+    font-size: 1.1rem;
+    color: var(--accent-gold);
+}
+
+/* Modal Overlay & Content */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+    color: var(--accent-gold);
+    font-size: 1.35rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--accent-gold);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
 }
