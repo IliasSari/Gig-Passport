@@ -1,4 +1,4 @@
-/* Variables, Reset & Header */
+/* 1st step. Variables, Reset & Header */
 
 :root {
     --bg-color: #121316;
@@ -95,4 +95,70 @@ body {
 
 .btn-secondary:hover {
     background-color: #353a47;
+}
+/* Second step. Stats Bar & Search Controls */
+
+/* Stats Bar Layout */
+.stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-num {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Controls Bar (Search & Filters) */
+.controls-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.controls-bar input,
+.controls-bar select {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.controls-bar input:focus,
+.controls-bar select:focus {
+    border-color: var(--accent-gold);
+}
+
+.controls-bar input {
+    flex: 1;
+}
+
+.controls-bar select {
+    min-width: 160px;
+    cursor: pointer;
 }
