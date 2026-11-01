@@ -174,15 +174,16 @@ body {
 
 /* Individual Gig Card (Passport Stamp Style) */
 .gig-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-left: 4px solid var(--accent-gold);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
+    background-color: var(--card-bg, #161b22);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent-color, #f0b429);
+    border-radius: 8px;
+    padding: 1rem 1.25rem; /* Μειωμένο εσωτερικό περιθώριο */
+    margin-bottom: 0.8rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    gap: 1rem;
 }
 
 .gig-card:hover {
@@ -190,30 +191,26 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.gig-info h3 {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    margin-bottom: 0.3rem;
+.gig-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+    color: #fff;
 }
 
 .gig-meta {
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    font-size: 0.85rem;
+    color: #8b949e;
     display: flex;
     gap: 1rem;
-    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .gig-notes {
-    font-size: 0.95rem;
-    color: var(--text-color);
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+    color: #c9d1d9;
     font-style: italic;
-    background: rgba(255, 255, 255, 0.02);
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    margin-top: 0.5rem;
 }
-
 .gig-rating {
     font-size: 1.1rem;
     color: var(--accent-gold);

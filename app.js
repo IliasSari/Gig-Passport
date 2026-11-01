@@ -1,6 +1,4 @@
-/* --- Gig Passport App Script (With Edit, Delete & PDF Export) --- */
-
-/* First step. Database Initialization, Modal Control & Gig Creation */
+/* --- Gig Passport App Script --- */
 
 // Initialize Dexie database
 const db = new Dexie('GigPassportDB');
@@ -13,15 +11,17 @@ const openModalBtn = document.getElementById('openModalBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const gigModal = document.getElementById('gigModal');
 const gigForm = document.getElementById('gigForm');
-const modalTitle = document.getElementById('modalTitle') || document.querySelector('.modal-content h2');
+const modalTitle = document.querySelector('.modal-content h2');
 const timeline = document.getElementById('timeline');
 const totalGigsEl = document.getElementById('totalGigs');
 const uniqueBandsEl = document.getElementById('uniqueBands');
 const topVenueEl = document.getElementById('topVenue');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
+const searchInput = document.getElementById('searchInput');
+const yearFilter = document.getElementById('yearFilter');
 
-// Track if we are editing an existing gig
 let editingGigId = null;
+let allGigsCache = []; // Cache για γρήγορο φιλτράρισμα
 
 // Load gigs and update UI on page load
 window.addEventListener('DOMContentLoaded', () => {
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // --- 1. Modal Toggle Handlers ---
 openModalBtn.addEventListener('click', () => {
-    editingGigId = null; // Reset edit state
+    editingGigId = null;
     gigForm.reset();
     if (modalTitle) modalTitle.textContent = 'Add New Live';
     gigModal.style.display = 'flex';
@@ -64,13 +64,9 @@ gigForm.addEventListener('submit', async (e) => {
 
     try {
         if (editingGigId !== null) {
-            // Update existing gig
             await db.gigs.update(editingGigId, gigData);
-            console.log('Gig updated successfully!', editingGigId);
         } else {
-            // Add new gig
             await db.gigs.add(gigData);
-            console.log('New gig added successfully!', gigData);
         }
 
         gigForm.reset();
@@ -78,28 +74,69 @@ gigForm.addEventListener('submit', async (e) => {
         editingGigId = null;
         
         loadGigs();
-        
     } catch (err) {
         console.error('Failed to save gig: ', err);
         alert('There was a problem with saving.');
     }
 });
 
-/* Second step. Render Timeline & Update Statistics */
-
-// --- 3. Render Timeline & Statistics ---
+// --- 3. Load Gigs & Update UI ---
 async function loadGigs() {
     try {
-        const gigs = await db.gigs.toArray();
-        gigs.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        allGigsCache = await db.gigs.toArray();
+        allGigsCache.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-        updateStats(gigs);
-        renderTimeline(gigs);
+        updateStats(allGigsCache);
+        populateYearDropdown(allGigsCache);
+        filterAndRenderGigs();
     } catch (err) {
         console.error('Failed to load gigs:', err);
     }
 }
 
+// Populate Year Filter options dynamically
+function populateYearDropdown(gigs) {
+    const currentSelected = yearFilter.value;
+    const years = [...new Set(gigs.map(g => g.date ? g.date.substring(0, 4) : '').filter(Boolean))];
+    years.sort((a, b) => b - a);
+
+    yearFilter.innerHTML = '<option value="all">All Years</option>';
+    years.forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearFilter.appendChild(option);
+    });
+
+    if (years.includes(currentSelected)) {
+        yearFilter.value = currentSelected;
+    }
+}
+
+// --- 4. Search & Filter Logic ---
+searchInput.addEventListener('input', filterAndRenderGigs);
+yearFilter.addEventListener('change', filterAndRenderGigs);
+
+function filterAndRenderGigs() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const selectedYear = yearFilter.value;
+
+    const filtered = allGigsCache.filter(gig => {
+        const band = (gig.bandName || '').toLowerCase();
+        const venue = (gig.venueName || '').toLowerCase();
+        const notes = (gig.notes || '').toLowerCase();
+        const gigYear = gig.date ? gig.date.substring(0, 4) : '';
+
+        const matchesSearch = band.includes(searchTerm) || venue.includes(searchTerm) || notes.includes(searchTerm);
+        const matchesYear = selectedYear === 'all' || gigYear === selectedYear;
+
+        return matchesSearch && matchesYear;
+    });
+
+    renderTimeline(filtered);
+}
+
+// --- 5. Statistics Calculation ---
 function updateStats(gigs) {
     const totalGigs = gigs.length;
     totalGigsEl.textContent = totalGigs;
@@ -132,11 +169,12 @@ function updateStats(gigs) {
     topVenueEl.textContent = topVenue;
 }
 
+// --- 6. Render Timeline ---
 function renderTimeline(gigs) {
     if (!gigs || gigs.length === 0) {
         timeline.innerHTML = `
             <p style="text-align:center; color: var(--text-muted, #8b949e); padding: 2rem;">
-                No entries yet. Add your first live!
+                No entries found.
             </p>
         `;
         return;
@@ -145,7 +183,6 @@ function renderTimeline(gigs) {
     timeline.innerHTML = '';
     gigs.forEach(gig => {
         const ratingNum = Number(gig.rating) || 5;
-        // Διόρθωση υπολογισμού αστεριών (Syntax Error Fix)
         const stars = '★'.repeat(ratingNum) + '☆'.repeat(Math.max(0, 5 - ratingNum));
 
         const card = document.createElement('div');
@@ -171,7 +208,7 @@ function renderTimeline(gigs) {
     });
 }
 
-// --- 4. Edit & Delete Actions ---
+// --- 7. Edit & Delete Actions ---
 window.editGig = async function(id) {
     try {
         const gig = await db.gigs.get(id);
@@ -203,7 +240,7 @@ window.deleteGig = async function(id) {
     }
 };
 
-// --- 5. Export to PDF (Native Print Dialog) ---
+// --- 8. Export to PDF ---
 exportPdfBtn.addEventListener('click', () => {
     window.print();
 });
