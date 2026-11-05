@@ -5,24 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gig Passport</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    
-    <!-- Main App Header -->
     <header class="app-header">
         <div class="logo">
             <span class="passport-icon">🎟️</span>
             <h1>Gig Passport</h1>
         </div>
         <div class="header-actions">
-            <button class="btn btn-secondary" id="exportPdfBtn">🖨️ Export PDF</button>
+            <div class="dropdown" style="position: relative; display: inline-block;">
+                <button class="btn btn-secondary" id="exportMenuBtn">💾 Backup & Export ▾</button>
+                <div id="exportDropdown" class="dropdown-content" style="display: none; position: absolute; right: 0; top: 110%; background: #161b22; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); min-width: 170px; z-index: 100; overflow: hidden;">
+                    <button id="exportJsonBtn" style="width: 100%; text-align: left; padding: 0.6rem 1rem; background: none; border: none; color: #fff; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">📥 Export JSON</button>
+                    <button id="importJsonBtn" style="width: 100%; text-align: left; padding: 0.6rem 1rem; background: none; border: none; color: #fff; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">📤 Import JSON</button>
+                    <div style="height: 1px; background: rgba(255,255,255,0.08);"></div>
+                    <button id="exportPdfBtn" style="width: 100%; text-align: left; padding: 0.6rem 1rem; background: none; border: none; color: #fff; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">🖨️ Print / PDF</button>
+                </div>
+            </div>
+            <input type="file" id="importFileInput" accept=".json" style="display: none;">
             <button class="btn btn-primary" id="openModalBtn">+ New Live</button>
         </div>
     </header>
 
     <main class="container">
-        <!-- 1. Stats Bar -->
-        <section class="stats-bar">
+        <section class="stats-bar" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
             <div class="stat-card">
                 <span class="stat-num" id="totalGigs">0</span>
                 <span class="stat-label">Concerts</span>
@@ -32,12 +39,38 @@
                 <span class="stat-label">Bands</span>
             </div>
             <div class="stat-card">
+                <span class="stat-num" id="totalSpent">0€</span>
+                <span class="stat-label">Total Spent</span>
+            </div>
+            <div class="stat-card">
                 <span class="stat-num" id="topVenue">-</span>
                 <span class="stat-label">Top Venue</span>
             </div>
         </section>
 
-        <!-- 2. Search & Filters -->
+        <section class="chart-section" style="background: var(--card-bg, #161b22); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+            <h3 style="margin-bottom: 0.85rem; font-size: 0.9rem; color: #f3f4f6;">Concerts per Year</h3>
+            <div style="position: relative; height: 200px; width: 100%;">
+                <canvas id="gigsChart"></canvas>
+            </div>
+        </section>
+
+        <section class="analytics-section" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.85rem;">
+            <div style="background: var(--card-bg, #161b22); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <h3 style="margin-bottom: 0.75rem; font-size: 0.9rem; color: #f0b429;">💶 Expenses Breakdown</h3>
+                <div id="moneyBreakdown" class="breakdown-content" style="font-size: 0.85rem; color: #d1d5db; max-height: 160px; overflow-y: auto;">
+                    <p style="color: #9ca3af;">No data yet.</p>
+                </div>
+            </div>
+
+            <div style="background: var(--card-bg, #161b22); padding: 1.25rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                <h3 style="margin-bottom: 0.75rem; font-size: 0.9rem; color: #f0b429;">📍 Venues Breakdown</h3>
+                <div id="venueBreakdown" class="breakdown-content" style="font-size: 0.85rem; color: #d1d5db; max-height: 160px; overflow-y: auto;">
+                    <p style="color: #9ca3af;">No data yet.</p>
+                </div>
+            </div>
+        </section>
+
         <section class="controls-bar">
             <input type="text" id="searchInput" placeholder="🔍 Search band, venue or memories...">
             <select id="yearFilter">
@@ -45,15 +78,13 @@
             </select>
         </section>
 
-        <!-- 3. Timeline / Gigs List -->
         <section id="timeline" class="timeline-container">
-            <p style="text-align:center; color: var(--muted); padding: 2rem;">
+            <p style="text-align:center; color: var(--text-muted); padding: 2rem;">
                 No entries yet. Add your first live!
             </p>
         </section>
     </main>
 
-    <!-- 4. Modal Form for New Live -->
     <div id="gigModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>Add New Live</h2>
@@ -75,6 +106,10 @@
                     <input type="number" id="gigRating" min="1" max="5" value="5">
                 </div>
                 <div class="form-group">
+                    <label for="ticketPrice">Ticket Price (€)</label>
+                    <input type="number" id="ticketPrice" step="0.01" min="0" placeholder="e.g. 20" value="0">
+                </div>
+                <div class="form-group">
                     <label for="gigNotes">Memories / Notes</label>
                     <textarea id="gigNotes" rows="3" placeholder="Impressions, setlist, friends..."></textarea>
                 </div>
@@ -86,9 +121,7 @@
         </div>
     </div>
 
-    <!-- Dexie.js (IndexedDB Wrapper) -->
     <script src="https://unpkg.com/dexie@3/dist/dexie.js"></script>
-    <!-- Main Application Script -->
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>

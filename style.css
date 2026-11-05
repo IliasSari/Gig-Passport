@@ -34,15 +34,17 @@ body {
 }
 
 /* App Header */
+/* --- Header Alignment Fix --- */
 .app-header {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto 1rem auto; /* Κεντράρισμα και σωστή απόσταση από κάτω */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.25rem 2rem;
-    background-color: #181a20;
-    border-bottom: 1px solid var(--border-color);
+    padding: 0 0.5rem; /* Ελαφρύ padding για να μην κολλάνε τα στοιχεία στα άκρα σε μικρές οθόνες */
+    border-bottom: 1px solid var(--card-border);
 }
-
 .logo {
     display: flex;
     align-items: center;
