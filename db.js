@@ -4,6 +4,9 @@ export const db = new Dexie('GigPassportDB');
 db.version(1).stores({
     gigs: '++id, bandName, venueName, date, rating'
 });
+db.version(2).stores({
+    gigs: '++id, bandName, venueName, date, rating, ticketPrice'
+});
 
 export async function getAllGigs() {
     const gigs = await db.gigs.toArray();
@@ -25,4 +28,11 @@ export async function deleteGigFromDb(id) {
 
 export async function getGigById(id) {
     return await db.gigs.get(id);
+}
+
+export async function clearAndImportGigs(gigsArray) {
+    return await db.transaction('rw', db.gigs, async () => {
+        await db.gigs.clear();
+        await db.gigs.bulkAdd(gigsArray);
+    });
 }
