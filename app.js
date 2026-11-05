@@ -62,7 +62,7 @@ gigForm.addEventListener('submit', async (e) => {
         venueName: document.getElementById('venueName').value.trim(),
         date: document.getElementById('gigDate').value,
         rating: parseInt(document.getElementById('gigRating').value, 10),
-        ticketPrice: parseFloat(document.getElementById('ticketPrice').value) || 1,
+        ticketPrice: parseFloat(document.getElementById('ticketPrice').value) || 0,
         notes: document.getElementById('gigNotes').value.trim()
     };
 
