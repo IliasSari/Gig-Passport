@@ -1,9 +1,12 @@
 /* --- Gig Passport App Script --- */
 
-// Initialize Dexie database
+// Initialize Dexie database (Updated to version 2 with ticketPrice)
 const db = new Dexie('GigPassportDB');
 db.version(1).stores({
     gigs: '++id, bandName, venueName, date, rating'
+});
+db.version(2).stores({
+    gigs: '++id, bandName, venueName, date, rating, ticketPrice'
 });
 
 // DOM Elements
@@ -21,7 +24,7 @@ const searchInput = document.getElementById('searchInput');
 const yearFilter = document.getElementById('yearFilter');
 
 let editingGigId = null;
-let allGigsCache = []; // Cache για γρήγορο φιλτράρισμα
+let allGigsCache = [];
 
 // Load gigs and update UI on page load
 window.addEventListener('DOMContentLoaded', () => {
@@ -59,6 +62,7 @@ gigForm.addEventListener('submit', async (e) => {
         venueName: document.getElementById('venueName').value.trim(),
         date: document.getElementById('gigDate').value,
         rating: parseInt(document.getElementById('gigRating').value, 10),
+        ticketPrice: parseFloat(document.getElementById('ticketPrice').value) || 1,
         notes: document.getElementById('gigNotes').value.trim()
     };
 
@@ -184,6 +188,7 @@ function renderTimeline(gigs) {
     gigs.forEach(gig => {
         const ratingNum = Number(gig.rating) || 5;
         const stars = '★'.repeat(ratingNum) + '☆'.repeat(Math.max(0, 5 - ratingNum));
+        const priceTag = gig.ticketPrice > 0 ? `<span>💶 ${gig.ticketPrice}€</span>` : '';
 
         const card = document.createElement('div');
         card.className = 'gig-card';
@@ -193,6 +198,7 @@ function renderTimeline(gigs) {
                 <div class="gig-meta">
                     <span>📍 ${escapeHTML(gig.venueName || '')}</span>
                     <span>📅 ${escapeHTML(gig.date || '')}</span>
+                    ${priceTag}
                 </div>
                 ${gig.notes ? `<div class="gig-notes">"${escapeHTML(gig.notes)}"</div>` : ''}
             </div>
@@ -219,6 +225,7 @@ window.editGig = async function(id) {
         document.getElementById('venueName').value = gig.venueName || '';
         document.getElementById('gigDate').value = gig.date || '';
         document.getElementById('gigRating').value = gig.rating || 5;
+        document.getElementById('ticketPrice').value = gig.ticketPrice || '';
         document.getElementById('gigNotes').value = gig.notes || '';
 
         if (modalTitle) modalTitle.textContent = 'Edit Live Entry';
