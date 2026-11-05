@@ -1,272 +1,319 @@
-/* 1st step. Variables, Reset & Header */
-
 :root {
-    --bg-color: #121316;
-    --card-bg: rgba(22, 27, 34, 0.75);    
-    --border-color: #2e323d;
+    --bg-dark: #04060b;
+    --card-bg: rgba(17, 24, 39, 0.75);
     --card-border: rgba(255, 255, 255, 0.08);
-    --card-hover-border: rgba(240, 180, 41, 0.4);   
-    --text-color: #f0f2f5;
-    --text-muted: #9da4b0;
-    --accent-gold: #d4af37;
-    --accent-hover: #e5be3b;
-    --radius: 12px;
+    --card-border-hover: rgba(240, 180, 41, 0.5);
+    --accent-gold: #f0b429;
+    --accent-hover: #f3c24f;
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --danger: #ef4444;
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    line-height: 1.6;
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+    background-image: 
+        radial-gradient(circle at 10% 15%, rgba(240, 180, 41, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 90% 85%, rgba(139, 92, 246, 0.06) 0%, transparent 40%);
 }
 
-/* Main Container */
 .container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 0 1.5rem;
+    width: 100%;
+    max-width: 920px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    z-index: 1;
 }
 
-/* App Header */
-/* --- Header Alignment Fix --- */
 .app-header {
     width: 100%;
     max-width: 920px;
-    margin: 0 auto 1rem auto; /* Κεντράρισμα και σωστή απόσταση από κάτω */
+    margin: 0 auto 1.25rem auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 0.5rem; /* Ελαφρύ padding για να μην κολλάνε τα στοιχεία στα άκρα σε μικρές οθόνες */
+    padding: 0 0.5rem 1.25rem 0.5rem;
     border-bottom: 1px solid var(--card-border);
 }
+
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-}
-
-.logo h1 {
-    font-size: 1.5rem;
-    color: var(--accent-gold);
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    gap: 0.85rem;
 }
 
 .passport-icon {
-    font-size: 1.75rem;
+    font-size: 2rem;
+    filter: drop-shadow(0 0 10px rgba(240, 180, 41, 0.4));
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.logo h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .header-actions {
     display: flex;
     gap: 0.75rem;
+    position: relative;
+    align-items: center;
 }
 
-/* Buttons */
 .btn {
     padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: opacity 0.2s ease, transform 0.1s ease;
-}
-
-.btn:active {
-    transform: scale(0.98);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    user-select: none;
 }
 
 .btn-primary {
-    background-color: var(--accent-gold);
-    color: #121316;
+    background: linear-gradient(135deg, var(--accent-gold), #d99f22);
+    color: #04060b;
+    box-shadow: 0 4px 15px rgba(240, 180, 41, 0.25);
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(240, 180, 41, 0.4);
+    background: linear-gradient(135deg, var(--accent-hover), var(--accent-gold));
 }
 
 .btn-secondary {
-    background-color: #2a2e39;
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    color: var(--text-main);
+    border-color: var(--card-border);
 }
 
 .btn-secondary:hover {
-    background-color: #353a47;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
 }
-/* Second step. Stats Bar & Search Controls */
 
-/* Stats Bar Layout */
+.dropdown-content {
+    background: rgba(17, 24, 39, 0.9) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7) !important;
+    overflow: hidden;
+    padding: 6px;
+}
+
 .stats-bar {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));    
-    gap: 1.25rem;
-    margin-bottom: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
 }
 
 .stat-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    border-color: var(--card-border-hover);
+    transform: translateY(-4px);
 }
 
 .stat-num {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 800;
     color: var(--accent-gold);
-    margin-bottom: 0.25rem;
+    text-shadow: 0 0 12px rgba(240, 180, 41, 0.3);
+    margin-bottom: 0.2rem;
+}
+
+#topVenue {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    color: var(--accent-gold);
 }
 
 .stat-label {
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
 }
 
-/* Controls Bar (Search & Filters) */
+.chart-section, .analytics-section > div {
+    background: var(--card-bg);
+    backdrop-filter: blur(14px);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 1.35rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
 .controls-bar {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
+    gap: 0.85rem;
 }
 
-.controls-bar input,
-.controls-bar select {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
+.controls-bar input, .controls-bar select {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
     padding: 0.75rem 1rem;
-    color: var(--text-color);
-    font-size: 0.95rem;
+    color: var(--text-main);
+    font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.3s ease;
 }
 
-.controls-bar input:focus,
-.controls-bar select:focus {
+.controls-bar input { flex-grow: 1; }
+.controls-bar select { min-width: 140px; cursor: pointer; }
+
+.controls-bar input:focus, .controls-bar select:focus {
     border-color: var(--accent-gold);
+    box-shadow: 0 0 20px rgba(240, 180, 41, 0.2);
 }
 
-.controls-bar input {
-    flex: 1;
-}
-
-.controls-bar select {
-    min-width: 160px;
-    cursor: pointer;
-}
-
-/* Third step. Timeline, Gig Cards & Modal */
-
-/* Timeline Container */
 .timeline-container {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.85rem;
 }
 
-/* Individual Gig Card (Passport Stamp Style) */
 .gig-card {
-    background-color: var(--card-bg);
-    backdrop-filter: blur(10px); /* Εφέ θόλωσης background (Glassmorphism) */
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--card-bg);
+    backdrop-filter: blur(14px);
     border: 1px solid var(--card-border);
-    border-left: 4px solid var(--accent-color);
-    border-radius: 10px;
-    padding: 1.1rem 1.4rem;
-    margin-bottom: 1rem;
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 12px;
+    padding: 1.15rem 1.35rem;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Ομαλή μετάβαση */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-} 
+    transition: all 0.3s ease;
+}
 
 .gig-card:hover {
-    transform: translateY(-3px); /* Ελαφρύ πέταγμα προς τα πάνω */
-    border-color: var(--card-hover-border);
-    box-shadow: 0 8px 24px rgba(240, 180, 41, 0.12); /* Διακριτική χρυσαφένια λάμψη */
+    transform: translateY(-3px);
+    border-color: var(--card-border-hover);
 }
 
 .gig-card h3 {
-    font-size: 1.15rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
     color: #fff;
 }
 
 .gig-meta {
-    font-size: 0.85rem;
-    color: #8b949e;
+    font-size: 0.82rem;
+    color: var(--text-muted);
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
 }
 
 .gig-notes {
-    margin-top: 0.4rem;
-    font-size: 0.9rem;
-    color: #c9d1d9;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #e5e7eb;
     font-style: italic;
-}
-.gig-rating {
-    font-size: 1.1rem;
-    color: var(--accent-gold);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    border-left: 2px solid rgba(240, 180, 41, 0.5);
 }
 
-/* 2. Modern Action Buttons with Fade */
+.card-actions {
+    display: flex;
+    gap: 6px;
+}
+
 .card-actions button {
-    opacity: 0.8;
-    transition: opacity 0.5s ease, transform 0.4s ease;
-}
-
-.gig-card:hover .card-actions button {
-    opacity: 1; /* Εμφανίζονται πιο έντονα όταν κάνεις hover στην κάρτα */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+    color: var(--text-main);
+    transition: all 0.2s ease;
 }
 
 .card-actions button:hover {
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.12);
 }
 
-/* 3. Sleeker Input & Select Controls */
-input[type="text"], 
-input[type="date"], 
-input[type="number"], 
-select, 
-textarea {
-    background-color: rgba(13, 17, 23, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 6px;
-    color: #fff;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+.card-actions .delete-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: var(--danger);
+    color: #fca5a5;
 }
 
-input:focus, select:focus, textarea:focus {
-    border-color: var(--accent-color);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.15); /* Μοντένo focus ring */
-}
-
-/* Modal Overlay & Content */
 .modal {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -274,57 +321,73 @@ input:focus, select:focus, textarea:focus {
 }
 
 .modal-content {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    width: 100%;
-    max-width: 500px;
+    background: rgba(17, 24, 39, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(240, 180, 41, 0.25);
+    border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
 }
 
 .modal-content h2 {
-    margin-bottom: 1.5rem;
-    color: var(--accent-gold);
-    font-size: 1.35rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    color: #fff;
 }
 
-/* Form Styles */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .form-group {
-    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 .form-group label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
     color: var(--text-muted);
-    margin-bottom: 0.5rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    color: var(--text-color);
-    font-size: 0.95rem;
+.form-group input, .form-group textarea, .form-group select {
+    background-color: rgba(4, 6, 11, 0.8);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: inherit;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
     border-color: var(--accent-gold);
+    box-shadow: 0 0 15px rgba(240, 180, 41, 0.25);
 }
 
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
+}
+
+@media print {
+    body { background: #fff; color: #000; padding: 0; }
+    .app-header .header-actions, .controls-bar, .chart-section, .card-actions, .modal { display: none !important; }
+    .container { max-width: 100%; }
+    .stat-card, .analytics-section > div, .gig-card { background: #fff !important; border: 1px solid #ccc !important; color: #000 !important; box-shadow: none !important; }
+    .stat-num, #topVenue, .gig-card h3 { color: #000 !important; }
 }

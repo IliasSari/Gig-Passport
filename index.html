@@ -108,7 +108,6 @@
                 <div class="form-group">
                     <label for="ticketPrice">Ticket Price (€)</label>
                     <input type="number" id="ticketPrice" step="0.01" min="0" placeholder="e.g. 20" value="0">
-                    <input type="number" id="ticketPrice" step="1" min="0" placeholder="e.g. 20">
                 </div>
                 <div class="form-group">
                     <label for="gigNotes">Memories / Notes</label>
@@ -119,6 +118,19 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 380px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚠️</div>
+            <h2 id="confirmTitle" style="margin-bottom: 0.5rem;">Διαγραφή Live</h2>
+            <p id="confirmMessage" style="color: var(--text-muted, #9ca3af); font-size: 0.9rem; margin-bottom: 1.5rem;">Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την καταχώρηση;</p>
+            <div class="modal-actions" style="justify-content: center;">
+                <button type="button" class="btn btn-secondary" id="confirmCancelBtn">Άκυρο</button>
+                <button type="button" class="btn btn-primary" id="confirmOkBtn" style="background: var(--danger, #ef4444); color: #fff;">Διαγραφή</button>
+            </div>
         </div>
     </div>
 
