@@ -17,8 +17,14 @@ const importJsonBtn = document.getElementById('importJsonBtn');
 const importFileInput = document.getElementById('importFileInput');
 const exportPdfBtn = document.getElementById('exportPdfBtn');
 
+const gigPosterFile = document.getElementById('gigPosterFile');
+const imageModal = document.getElementById('imageModal');
+const modalImagePreview = document.getElementById('modalImagePreview');
+const closeImageModal = document.getElementById('closeImageModal');
+
 let editingGigId = null;
 let allGigsCache = [];
+let currentPosterBase64 = '';
 
 window.addEventListener('DOMContentLoaded', () => {
     loadData();
@@ -35,6 +41,7 @@ window.addEventListener('click', () => {
 
 openModalBtn.addEventListener('click', () => {
     editingGigId = null;
+    currentPosterBase64 = '';
     gigForm.reset();
     document.getElementById('ticketPrice').value = '0';
     document.getElementById('gigRating').value = '5';
@@ -47,14 +54,51 @@ closeModalBtn.addEventListener('click', () => {
     editingGigId = null;
 });
 
+// Convert uploaded image to Base64
+gigPosterFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(uploadEvent) {
+            currentPosterBase64 = uploadEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
 gigForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    const bandNameInput = document.getElementById('bandName').value.trim();
+    const venueNameInput = document.getElementById('venueName').value.trim();
+    const dateInput = document.getElementById('gigDate').value;
+
+    // Έλεγχος για διπλοεγγραφή (ίδια μπάντα την ίδια ημερομηνία)
+    const isDuplicate = allGigsCache.some(gig => {
+        if (editingGigId !== null && gig.id === editingGigId) return false;
+        const sameBand = gig.bandName.toLowerCase() === bandNameInput.toLowerCase();
+        const sameDate = gig.date === dateInput;
+        return sameBand && sameDate;
+    });
+
+    if (isDuplicate) {
+        const confirmDuplicate = await showConfirmDialog(
+            `Υπάρχει ήδη καταχωρημένο live για τους "${bandNameInput}" στις ${dateInput}! Θέλετε σίγουρα να το προσθέσετε ξανά;`,
+            "⚠️ Διπλοεγγραφή",
+            "Προσθήκη",
+            false
+        );
+        if (!confirmDuplicate) return; // Αν πατήσει "Άκυρο", σταματάει η αποθήκευση
+    }
+
     const gigData = {
-        bandName: document.getElementById('bandName').value.trim(),
-        venueName: document.getElementById('venueName').value.trim(),
-        date: document.getElementById('gigDate').value,
+        bandName: bandNameInput,
+        venueName: venueNameInput,
+        date: dateInput,
         rating: parseInt(document.getElementById('gigRating').value, 10),
         ticketPrice: parseFloat(document.getElementById('ticketPrice').value) || 0,
+        genre: document.getElementById('gigGenre').value,
+        poster: currentPosterBase64,
         notes: document.getElementById('gigNotes').value.trim()
     };
 
@@ -65,6 +109,7 @@ gigForm.addEventListener('submit', async (e) => {
     }
 
     gigForm.reset();
+    currentPosterBase64 = '';
     gigModal.style.display = 'none';
     editingGigId = null;
     loadData();
@@ -98,8 +143,9 @@ function filterAndRenderGigs() {
     const filtered = allGigsCache.filter(gig => {
         const band = (gig.bandName || '').toLowerCase();
         const venue = (gig.venueName || '').toLowerCase();
+        const genre = (gig.genre || '').toLowerCase();
         const gigYear = gig.date ? gig.date.substring(0, 4) : '';
-        return (band.includes(searchTerm) || venue.includes(searchTerm)) && (selectedYear === 'all' || gigYear === selectedYear);
+        return (band.includes(searchTerm) || venue.includes(searchTerm) || genre.includes(searchTerm)) && (selectedYear === 'all' || gigYear === selectedYear);
     });
 
     renderTimeline(filtered);
@@ -117,20 +163,31 @@ function renderTimeline(gigs) {
         
         const stars = '★'.repeat(gig.rating || 5) + '☆'.repeat(5 - (gig.rating || 5));
         const priceText = gig.ticketPrice ? ` | 💶 ${gig.ticketPrice.toFixed(2)}€` : '';
+        const genreBadge = gig.genre ? `<span class="genre-badge">${escapeHtml(gig.genre)}</span>` : '';
         const notesHtml = gig.notes ? `<div class="gig-notes">${escapeHtml(gig.notes)}</div>` : '';
+        
+        const posterThumbHtml = gig.poster 
+            ? `<img src="${gig.poster}" class="gig-poster-thumb" onclick="window.showImageModal('${gig.poster}')" title="View Ticket/Poster">` 
+            : '';
 
         card.innerHTML = `
-            <div style="flex-grow: 1;">
-                <h3>${escapeHtml(gig.bandName)}</h3>
-                <div class="gig-meta">
-                    <span>📍 ${escapeHtml(gig.venueName)}</span>
-                    <span>📅 ${gig.date || ''}</span>
-                    <span class="gig-rating">${stars}</span>
-                    <span>${priceText}</span>
+            <div class="card-main-content">
+                <div style="flex-grow: 1;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.3rem;">
+                        <h3>${escapeHtml(gig.bandName)}</h3>
+                        ${genreBadge}
+                    </div>
+                    <div class="gig-meta">
+                        <span>📍 ${escapeHtml(gig.venueName)}</span>
+                        <span>📅 ${gig.date || ''}</span>
+                        <span class="gig-rating">${stars}</span>
+                        <span>${priceText}</span>
+                    </div>
+                    ${notesHtml}
                 </div>
-                ${notesHtml}
+                ${posterThumbHtml}
             </div>
-            <div class="card-actions">
+            <div class="card-actions" style="margin-top: 0.75rem; justify-content: flex-end;">
                 <button onclick="window.editGig(${gig.id})" title="Edit">✏️</button>
                 <button class="delete-btn" onclick="window.deleteGig(${gig.id})" title="Delete">🗑️</button>
             </div>
@@ -146,44 +203,77 @@ function escapeHtml(str) {
     );
 }
 
+// Image modal helpers
+window.showImageModal = function(src) {
+    modalImagePreview.src = src;
+    imageModal.style.display = 'flex';
+};
+
+if (closeImageModal) {
+    closeImageModal.addEventListener('click', () => {
+        imageModal.style.display = 'none';
+    });
+}
+
+window.addEventListener('click', (e) => {
+    if (e.target === imageModal) {
+        imageModal.style.display = 'none';
+    }
+});
+
 window.editGig = async function(id) {
     const gig = await getGigById(id);
     if (!gig) return;
     editingGigId = id;
+    currentPosterBase64 = gig.poster || '';
     document.getElementById('bandName').value = gig.bandName || '';
     document.getElementById('venueName').value = gig.venueName || '';
     document.getElementById('gigDate').value = gig.date || '';
     document.getElementById('gigRating').value = gig.rating || 5;
     document.getElementById('ticketPrice').value = gig.ticketPrice || 0;
+    document.getElementById('gigGenre').value = gig.genre || 'Rock';
     document.getElementById('gigNotes').value = gig.notes || '';
-    document.querySelector('#gigForm h2') ? document.querySelector('#gigForm h2').textContent = 'Edit Live' : null;
     gigModal.style.display = 'flex';
 };
 
-function showConfirmDialog(message) {
+function showConfirmDialog(message, title = "Επιβεβαίωση", okText = "Επιβεβαίωση", isDanger = true) {
     return new Promise((resolve) => {
         const confirmModal = document.getElementById('confirmModal');
+        const confirmTitle = document.getElementById('confirmTitle');
         const confirmMessage = document.getElementById('confirmMessage');
         const confirmOkBtn = document.getElementById('confirmOkBtn');
         const confirmCancelBtn = document.getElementById('confirmCancelBtn');
 
-        confirmMessage.textContent = message;
-        confirmModal.style.display = 'flex';
+        if (confirmTitle) confirmTitle.textContent = title;
+        if (confirmMessage) confirmMessage.textContent = message;
+        if (confirmOkBtn) {
+            confirmOkBtn.textContent = okText;
+            if (isDanger) {
+                confirmOkBtn.style.background = 'var(--danger, #ef4444)';
+                confirmOkBtn.style.color = '#fff';
+            } else {
+                confirmOkBtn.style.background = 'linear-gradient(135deg, var(--accent-gold), #d99f22)';
+                confirmOkBtn.style.color = '#04060b';
+            }
+        }
 
+        if (confirmModal) confirmModal.style.display = 'flex';
+
+        // Ασφαλής αντικατάσταση για καθαρισμό παλιών listeners
         const newOkBtn = confirmOkBtn.cloneNode(true);
         const newCancelBtn = confirmCancelBtn.cloneNode(true);
         confirmOkBtn.parentNode.replaceChild(newOkBtn, confirmOkBtn);
         confirmCancelBtn.parentNode.replaceChild(newCancelBtn, confirmCancelBtn);
 
         document.getElementById('confirmOkBtn').addEventListener('click', () => {
-            confirmModal.style.display = 'none';
+            if (confirmModal) confirmModal.style.display = 'none';
             resolve(true);
-        });
+        }, { once: true });
 
         document.getElementById('confirmCancelBtn').addEventListener('click', () => {
-            confirmModal.style.display = 'none';
+            if (confirmModal) confirmModal.style.display = 'none';
             resolve(false);
-        });
+        }, { once: true });
 
         window.onclick = (e) => {
             if (e.target === confirmModal) {
@@ -195,7 +285,7 @@ function showConfirmDialog(message) {
 }
 
 window.deleteGig = async function(id) {
-    const confirmed = await showConfirmDialog('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την καταχώρηση;');
+    const confirmed = await showConfirmDialog('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή την καταχώρηση;', 'Διαγραφή Live', 'Διαγραφή', true);
     if (confirmed) {
         try {
             await deleteGigFromDb(id);
